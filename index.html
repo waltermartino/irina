@@ -5,50 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Postulación - Irina AI</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 350px; width: 90%; }
-        h1 { color: #1a73e8; font-size: 22px; margin-bottom: 10px; }
-        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        button { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; }
-        button:disabled { background: #ccc; cursor: not-allowed; }
+        body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 300px; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
+        #vapi-btn { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
     <div class="card">
-        <h1>Proceso de Selección</h1>
-        <p>Ingresá tu DNI para hablar con Irina.</p>
-        <input type="number" id="dniInput" placeholder="Número de documento">
-        <button id="vapi-btn" disabled>Cargando Irina...</button>
+        <h2>Irina Hire</h2>
+        <input type="number" id="dniInput" placeholder="Tu DNI">
+        <button id="vapi-btn">📞 Iniciar Llamada</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js"></script>
 
     <script>
-      let vapiInstance = null;
       const btn = document.getElementById('vapi-btn');
-
-      // Esperamos que el script de arriba cargue
-      window.onload = () => {
-        if (window.vapiSDK && window.vapiSDK.Vapi) {
-          // CLAVE PÚBLICA (Verificá que sea EXACTAMENTE la de tu panel)
-          vapiInstance = new window.vapiSDK.Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd'); 
-          
-          btn.innerText = "📞 Iniciar Llamada";
-          btn.disabled = false;
-          console.log("Vapi listo");
-        }
-      };
-
+      
       btn.addEventListener('click', () => {
         const dniVal = document.getElementById('dniInput').value;
-        if (!dniVal) { alert("Por favor, ingresá tu DNI."); return; }
+        if (!dniVal) { alert("Poné tu DNI"); return; }
 
-        vapiInstance.start({
-          assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716", // ID de tu captura image_3bd2a0.png
-          assistantOverrides: {
-            variableValues: { dni: dniVal }
-          }
-        });
+        // Intentamos arrancar Vapi directamente al hacer clic
+        try {
+            const vapi = new window.vapiSDK.Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
+            vapi.start({
+                assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
+                assistantOverrides: { variableValues: { dni: dniVal } }
+            });
+            console.log("Llamada enviada");
+        } catch (e) {
+            alert("Error: La herramienta aún no cargó. Refrescá la página y esperá 5 segundos.");
+            console.error(e);
+        }
       });
     </script>
 </body>
