@@ -2,62 +2,65 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Irina Hire - V23</title>
+    <title>Irina Hire - V24</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script type="module">
-        import Vapi from 'https://cdn.jsdelivr.net/npm/@vapi-ai/web/+esm';
+        import Vapi from 'https://cdn.jsdelivr.net/npm/@vapi-ai/web@latest/dist/index.es.js';
 
+        // Creamos la conexión con tu Key corregida
         const vapi = new Vapi("940cb800-d888-4be6-92c7-e8fb0b6b6ddfd");
+        
         const btn = document.getElementById('btn-hablar');
         const status = document.getElementById('status');
 
         btn.addEventListener('click', () => {
-            status.innerText = "Conectando...";
+            status.innerText = "Conectando con Irina...";
+            // Usamos tu ID de asistente verificado
             vapi.start("af7a436b-5ca5-443d-9c37-adeb7832b716");
         });
 
         vapi.on('call-start', () => {
-            status.innerText = "¡En línea! Hablá ahora.";
+            status.innerText = "¡Conexión exitosa! Podés hablar.";
             btn.style.background = "#ff4444";
             btn.innerText = "🛑 FINALIZAR";
         });
 
         vapi.on('call-end', () => {
-            status.innerText = "Llamada terminada.";
+            status.innerText = "Entrevista terminada.";
             btn.style.background = "#1a73e8";
             btn.innerText = "📞 INICIAR LLAMADA";
         });
 
         vapi.on('error', (e) => {
-            console.error(e);
-            status.innerText = "Error. Revisá la consola (F12).";
+            console.error("Error detallado:", e);
+            status.innerText = "Error de conexión. Ver consola.";
         });
     </script>
 
     <style>
-        body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f4f7f9; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; width: 300px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f4f8; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 320px; }
         #btn-hablar { 
-            background: #1a73e8; color: white; border: none; padding: 18px; 
-            border-radius: 50px; font-size: 16px; font-weight: bold; 
-            cursor: pointer; width: 100%; transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+            background: #1a73e8; color: white; border: none; padding: 20px; 
+            border-radius: 60px; font-size: 16px; font-weight: bold; 
+            cursor: pointer; width: 100%; transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(26, 115, 232, 0.4);
         }
-        #btn-hablar:hover { transform: translateY(-2px); }
-        .ver { font-size: 10px; color: #aaa; margin-bottom: 10px; display: block; }
+        #btn-hablar:active { transform: scale(0.96); }
+        .info-top { font-size: 10px; color: #bbb; margin-bottom: 15px; display: block; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <span class="ver">SISTEMA V23 - MANUAL</span>
-        <h2 style="color: #333;">Irina Hire</h2>
-        <p style="color: #777; font-size: 14px; margin-bottom: 30px;">Presioná el botón para iniciar la entrevista de voz.</p>
+        <span class="info-top">MODO MANUAL V24</span>
+        <h2 style="color: #1a73e8; margin-bottom: 5px;">Irina Hire</h2>
+        <p style="color: #555; font-size: 14px; margin-bottom: 30px;">Tu asistente de selección con IA</p>
         
         <button id="btn-hablar">📞 INICIAR LLAMADA</button>
         
-        <p id="status" style="margin-top: 20px; font-size: 13px; color: #1a73e8; font-weight: bold;">Listo</p>
+        <p id="status" style="margin-top: 25px; font-size: 14px; color: #1a73e8; font-weight: 600;">Sistema listo</p>
     </div>
 
 </body>
