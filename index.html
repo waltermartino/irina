@@ -2,61 +2,63 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Irina V10 - Final Test</title>
+    <title>Irina V11 - Carga Directa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://unpkg.com/@vapi-ai/web@latest/dist/vapi.js"></script>
 </head>
-<body style="text-align:center; font-family:sans-serif; padding-top:50px; background:#f4f7f9;">
+<body style="text-align:center; font-family:sans-serif; padding-top:50px; background:#eef2f7;">
 
     <div style="background:white; display:inline-block; padding:30px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.1); max-width: 90%;">
         <h1 style="color:#1a73e8;">Irina Hire</h1>
-        <p style="background: #ffeded; color: #d93025; padding: 5px; display: inline-block; font-weight: bold;">VERSIÓN: V10</p>
-        <p>Si ves "V10", GitHub ya impactó el cambio.</p>
+        <p style="background: #333; color: #fff; padding: 5px 15px; display: inline-block; font-weight: bold; border-radius: 5px;">VERSIÓN: V11</p>
         
-        <button id="btn" style="padding:20px 40px; font-size:18px; background:#28a745; color:white; border:none; border-radius:50px; cursor:pointer; font-weight:bold; width: 100%;">
-            🚀 INICIAR ENTREVISTA
+        <p id="msg">Si ves "V11", GitHub ya actualizó.</p>
+        
+        <button id="btn" style="padding:20px; font-size:18px; background:#007bff; color:white; border:none; border-radius:10px; cursor:pointer; width: 100%;">
+            🚀 PROBAR LLAMADA V11
         </button>
         
-        <p id="status" style="margin-top:20px; color:#666; font-style: italic;">Estado: Esperando clic...</p>
+        <p id="status" style="margin-top:20px; color:#666;">Estado: Esperando...</p>
     </div>
 
     <script>
+      // INYECCIÓN MANUAL FORZADA
+      var script = document.createElement('script');
+      script.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+      document.head.appendChild(script);
+
       const btn = document.getElementById('btn');
       const status = document.getElementById('status');
-      let vapiInstance = null;
 
       btn.onclick = function() {
-        // 1. Buscamos el motor en el navegador
-        const SDK = window.Vapi || (window.vapiSDK ? window.vapiSDK.Vapi : null);
+        status.innerText = "Buscando motor...";
+        
+        // Intentamos con AMBOS nombres posibles de la librería
+        const SDK = window.vapiSDK || window.Vapi;
 
         if (SDK) {
-            status.innerText = "Estado: Motor cargado. Conectando...";
-            
-            // 2. Inicializamos la instancia (si no existe)
-            if (!vapiInstance) {
-                vapiInstance = new SDK("940cb800-d888-4be6-92c7-e8fb0b6ddfd");
+            status.innerText = "Conectando con Irina...";
+            try {
+                // Si es vapiSDK usamos .run, si es Vapi usamos new
+                if (SDK.run) {
+                    SDK.run({
+                        apiKey: "940cb800-d888-4be6-92c7-e8fb0b6ddfd",
+                        assistant: "af7a436b-5ca5-443d-9c37-adeb7832b716"
+                    });
+                } else {
+                    const v = new SDK("940cb800-d888-4be6-92c7-e8fb0b6ddfd");
+                    v.start({ assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716" });
+                }
+                btn.innerText = "LLAMANDO...";
+                btn.style.background = "#28a745";
+            } catch (e) {
+                alert("Error al ejecutar: " + e.message);
             }
-
-            // 3. Lanzamos la llamada
-            vapiInstance.start({
-                assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716"
-            });
-
-            // 4. Escuchamos qué pasa
-            vapiInstance.on('call-start', () => {
-                status.innerText = "Estado: EN LLAMADA (Hablá ahora)";
-                btn.style.background = "#dc3545";
-                btn.innerText = "🔴 EN VIVO";
-            });
-
-            vapiInstance.on('error', (e) => {
-                console.error("Error detallado:", e);
-                status.innerText = "Estado: ERROR DE CONEXIÓN";
-                alert("Vapi dice: " + (e.message || "Error desconocido de red"));
-            });
-
         } else {
-            alert("Error: El motor de voz no cargó en esta página. Refrescá.");
+            alert("V11: El archivo de Vapi sigue bloqueado por tu internet o navegador. Intentá refrescar o usar otra red.");
+            // Intento de carga alternativo en el momento
+            var s2 = document.createElement('script');
+            s2.src = "https://unpkg.com/@vapi-ai/web@latest/dist/vapi.js";
+            document.head.appendChild(s2);
         }
       };
     </script>
