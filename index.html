@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Postulación - Irina AI</title>
     
-    <script src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js"></script>
+    <script src="https://unpkg.com/@vapi-ai/web@latest/dist/vapi.js"></script>
 
     <style>
         body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
@@ -17,7 +17,6 @@
 <body>
     <div class="card">
         <h2>Irina Hire</h2>
-        <p>Ingresá tu DNI para hablar</p>
         <input type="number" id="dniInput" placeholder="Tu DNI">
         <button id="vapi-btn">📞 Iniciar Llamada</button>
     </div>
@@ -27,21 +26,29 @@
       
       btn.addEventListener('click', () => {
         const dniVal = document.getElementById('dniInput').value;
-        if (!dniVal) { alert("Por favor, poné tu DNI"); return; }
+        if (!dniVal) { alert("Poné tu DNI"); return; }
 
-        // Buscamos la librería en cualquier rincón del navegador
-        const VapiSDK = window.vapiSDK ? window.vapiSDK.Vapi : (window.Vapi ? window.Vapi : null);
+        // BUSQUEDA TRIPLE: Intentamos encontrar a Vapi como sea
+        const VapiSDK = window.Vapi || (window.vapiSDK ? window.vapiSDK.Vapi : null);
 
         if (VapiSDK) {
-            const vapi = new VapiSDK('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
-            vapi.start({
-                assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
-                assistantOverrides: { variableValues: { dni: dniVal } }
-            });
-            btn.innerText = "Conectando...";
-            btn.style.background = "#34a853";
+            try {
+                const vapi = new VapiSDK('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
+                vapi.start({
+                    assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
+                    assistantOverrides: { variableValues: { dni: dniVal } }
+                });
+                btn.innerText = "Conectando...";
+                btn.style.background = "#34a853";
+            } catch (err) {
+                alert("Error al iniciar: " + err.message);
+            }
         } else {
-            alert("Todavía no cargó. Esperá 3 segundos y dale de nuevo.");
+            alert("El motor de voz aún no baja de internet. Por favor, esperá 10 segundos con la página abierta e intentalo de nuevo.");
+            // Forzamos una recarga del script si falló
+            const s = document.createElement('script');
+            s.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+            document.head.appendChild(s);
         }
       });
     </script>
