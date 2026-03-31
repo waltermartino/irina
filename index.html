@@ -1,22 +1,65 @@
-btn.onclick = function() {
-        if (window.vapiSDK) {
-            status.innerText = "Estado: Iniciando motor...";
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Irina V10 - Final Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/@vapi-ai/web@latest/dist/vapi.js"></script>
+</head>
+<body style="text-align:center; font-family:sans-serif; padding-top:50px; background:#f4f7f9;">
+
+    <div style="background:white; display:inline-block; padding:30px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.1); max-width: 90%;">
+        <h1 style="color:#1a73e8;">Irina Hire</h1>
+        <p style="background: #ffeded; color: #d93025; padding: 5px; display: inline-block; font-weight: bold;">VERSIÓN: V10</p>
+        <p>Si ves "V10", GitHub ya impactó el cambio.</p>
+        
+        <button id="btn" style="padding:20px 40px; font-size:18px; background:#28a745; color:white; border:none; border-radius:50px; cursor:pointer; font-weight:bold; width: 100%;">
+            🚀 INICIAR ENTREVISTA
+        </button>
+        
+        <p id="status" style="margin-top:20px; color:#666; font-style: italic;">Estado: Esperando clic...</p>
+    </div>
+
+    <script>
+      const btn = document.getElementById('btn');
+      const status = document.getElementById('status');
+      let vapiInstance = null;
+
+      btn.onclick = function() {
+        // 1. Buscamos el motor en el navegador
+        const SDK = window.Vapi || (window.vapiSDK ? window.vapiSDK.Vapi : null);
+
+        if (SDK) {
+            status.innerText = "Estado: Motor cargado. Conectando...";
             
-            // Usamos el método start que es más "crudo" y directo
-            const vapiInstance = new window.vapiSDK.Vapi("940cb800-d888-4be6-92c7-e8fb0b6ddfd");
-            
+            // 2. Inicializamos la instancia (si no existe)
+            if (!vapiInstance) {
+                vapiInstance = new SDK("940cb800-d888-4be6-92c7-e8fb0b6ddfd");
+            }
+
+            // 3. Lanzamos la llamada
             vapiInstance.start({
                 assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716"
             });
 
+            // 4. Escuchamos qué pasa
             vapiInstance.on('call-start', () => {
-                status.innerText = "Estado: EN LLAMADA";
-                btn.style.background = "#34a853";
+                status.innerText = "Estado: EN LLAMADA (Hablá ahora)";
+                btn.style.background = "#dc3545";
+                btn.innerText = "🔴 EN VIVO";
             });
 
             vapiInstance.on('error', (e) => {
-                alert("ERROR: " + e.message);
-                status.innerText = "Estado: Falló la conexión";
+                console.error("Error detallado:", e);
+                status.innerText = "Estado: ERROR DE CONEXIÓN";
+                alert("Vapi dice: " + (e.message || "Error desconocido de red"));
             });
+
+        } else {
+            alert("Error: El motor de voz no cargó en esta página. Refrescá.");
         }
       };
+    </script>
+
+</body>
+</html>
