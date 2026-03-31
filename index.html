@@ -21,7 +21,7 @@
     </div>
 
     <script>
-      // MÉTODO DEL MANUAL: Inyección directa del Script
+      var vapiInstance = null;
       (function (d, t) {
         var g = d.createElement(t),
             s = d.getElementsByTagName(t)[0];
@@ -32,24 +32,30 @@
 
         g.onload = function () {
           console.log("Vapi cargado correctamente");
-          const vapi = new Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
-
-          document.getElementById('vapi-btn').addEventListener('click', () => {
-            const dni = document.getElementById('dniInput').value;
-            if (!dni) {
-              alert("Por favor, poné tu DNI.");
-              return;
-            }
-
-            vapi.start({
-              assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
-              assistantOverrides: {
-                variableValues: { dni: dni }
-              }
-            });
-          });
+          // CAMBIO CLAVE: Usamos window.vapiSDK para inicializar
+          vapiInstance = new window.vapiSDK.Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
         };
       })(document, "script");
+
+      document.getElementById('vapi-btn').addEventListener('click', () => {
+        const dni = document.getElementById('dniInput').value;
+        if (!dni) {
+          alert("Por favor, poné tu DNI.");
+          return;
+        }
+
+        if (!vapiInstance) {
+            alert("Todavía cargando... esperá un segundo.");
+            return;
+        }
+
+        vapiInstance.start({
+          assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
+          assistantOverrides: {
+            variableValues: { dni: dni }
+          }
+        });
+      });
     </script>
 </body>
 </html>
