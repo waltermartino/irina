@@ -2,34 +2,50 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Postulación - Irina AI</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 400px; }
         h1 { color: #1a73e8; margin-bottom: 10px; }
-        p { color: #5f6368; margin-bottom: 30px; }
-        button { background: #1a73e8; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        p { color: #5f6368; margin-bottom: 20px; }
+        input { width: 80%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; text-align: center; }
+        input:focus { border-color: #1a73e8; outline: none; }
+        button { background: #1a73e8; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
         button:hover { background: #1557b0; transform: scale(1.05); }
     </style>
 </head>
 <body>
     <div class="card">
         <h1>Bienvenido al Proceso</h1>
-        <p>Hacé clic abajo para iniciar tu charla con Irina.</p>
+        <p>Por favor, ingresá tu DNI para comenzar la entrevista con Irina.</p>
+        
+        <input type="number" id="dniInput" placeholder="Tu número de documento">
+        
         <button id="vapi-btn">📞 Iniciar Llamada</button>
     </div>
 
     <script src="https://cdn.vapi.ai/vapi.js"></script>
     <script>
-      const urlParams = new URLSearchParams(window.location.search);
-      const dniCandidato = urlParams.get('dni') || 'no especificado';
-
-      const vapi = new Vapi('940cb800-d888-4be6-92c7-e8fb06b6ddfd'); // <-- TU PUBLIC KEY DE VAPI ACÁ
+      // 1. Configuración de Vapi con tus claves
+      const vapi = new Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd'); 
 
       document.getElementById('vapi-btn').addEventListener('click', () => {
+        const dniIngresado = document.getElementById('dniInput').value;
+
+        if (!dniIngresado) {
+          alert("Por favor, ingresá tu DNI antes de llamar.");
+          return;
+        }
+
+        // 2. Iniciamos la llamada pasándole el DNI que escribió el usuario
         vapi.start({
-          assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716", // <-- TU ASSISTANT ID ACÁ
-          assistantOverrides: { variableValues: { dni: dniCandidato } }
+          assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
+          assistantOverrides: {
+            variableValues: {
+              dni: dniIngresado
+            }
+          }
         });
       });
     </script>
