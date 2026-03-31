@@ -9,11 +9,10 @@
         .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 350px; width: 90%; }
         h1 { color: #1a73e8; font-size: 22px; margin-bottom: 10px; }
         input { width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        #vapi-btn { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; }
+        button { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
-
     <div class="card">
         <h1>Proceso de Selección</h1>
         <p>Ingresá tu DNI para hablar con Irina.</p>
@@ -22,40 +21,35 @@
     </div>
 
     <script>
-      // MÉTODO DE CARGA SEGURA
-      var vapiInstance = null;
+      // MÉTODO DEL MANUAL: Inyección directa del Script
       (function (d, t) {
         var g = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
+            s = d.getElementsByTagName(t)[0];
         g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
         g.defer = true;
         g.async = true;
         s.parentNode.insertBefore(g, s);
+
         g.onload = function () {
-          vapiInstance = new Vapi("940cb800-d888-4be6-92c7-e8fb0b6ddfd");
+          console.log("Vapi cargado correctamente");
+          const vapi = new Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
+
+          document.getElementById('vapi-btn').addEventListener('click', () => {
+            const dni = document.getElementById('dniInput').value;
+            if (!dni) {
+              alert("Por favor, poné tu DNI.");
+              return;
+            }
+
+            vapi.start({
+              assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
+              assistantOverrides: {
+                variableValues: { dni: dni }
+              }
+            });
+          });
         };
       })(document, "script");
-
-      document.getElementById('vapi-btn').addEventListener('click', () => {
-        const dni = document.getElementById('dniInput').value;
-        
-        if (!dni) {
-          alert("Por favor, ingresá tu DNI primero.");
-          return;
-        }
-
-        if (!vapiInstance) {
-          alert("La conexión todavía se está cargando. Esperá un segundo y reintentá.");
-          return;
-        }
-
-        vapiInstance.start({
-          assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
-          assistantOverrides: {
-            variableValues: { dni: dni }
-          }
-        });
-      });
     </script>
 </body>
 </html>
