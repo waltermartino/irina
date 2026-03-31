@@ -9,7 +9,8 @@
         .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 350px; width: 90%; }
         h1 { color: #1a73e8; font-size: 22px; margin-bottom: 10px; }
         input { width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        button { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; }
+        button { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; transition: transform 0.2s; }
+        button:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
@@ -22,6 +23,8 @@
 
     <script>
       var vapiInstance = null;
+
+      // MÉTODO DE CARGA SEGÚN EL MANUAL DE VAPI
       (function (d, t) {
         var g = d.createElement(t),
             s = d.getElementsByTagName(t)[0];
@@ -32,27 +35,33 @@
 
         g.onload = function () {
           console.log("Vapi cargado correctamente");
-          // CAMBIO CLAVE: Usamos window.vapiSDK para inicializar
-          vapiInstance = new window.vapiSDK.Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
+          // CORRECCIÓN SEGÚN MANUAL: Acceso vía window.vapiSDK
+          if (window.vapiSDK && window.vapiSDK.Vapi) {
+              vapiInstance = new window.vapiSDK.Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
+              console.log("Instancia de Vapi lista");
+          }
         };
       })(document, "script");
 
       document.getElementById('vapi-btn').addEventListener('click', () => {
-        const dni = document.getElementById('dniInput').value;
-        if (!dni) {
-          alert("Por favor, poné tu DNI.");
+        const dniVal = document.getElementById('dniInput').value;
+        
+        if (!dniVal) {
+          alert("Por favor, ingresá tu DNI.");
           return;
         }
 
         if (!vapiInstance) {
-            alert("Todavía cargando... esperá un segundo.");
-            return;
+          alert("La conexión todavía se está estableciendo. Esperá 5 segundos y reintentá.");
+          return;
         }
 
+        console.log("Iniciando llamada con DNI:", dniVal);
+        
         vapiInstance.start({
           assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
           assistantOverrides: {
-            variableValues: { dni: dni }
+            variableValues: { dni: dniVal }
           }
         });
       });
