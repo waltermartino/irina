@@ -8,13 +8,12 @@
         body { font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
         .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 350px; width: 90%; }
         h1 { color: #1a73e8; font-size: 22px; margin-bottom: 10px; }
-        p { color: #555; margin-bottom: 20px; }
         input { width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        button { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; transition: background 0.3s; }
-        button:hover { background: #1557b0; }
+        #vapi-btn { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
+
     <div class="card">
         <h1>Proceso de Selección</h1>
         <p>Ingresá tu DNI para hablar con Irina.</p>
@@ -25,37 +24,33 @@
     <script src="https://cdn.vapi.ai/vapi.js"></script>
 
     <script>
-      // CONFIGURACIÓN CON TUS CLAVES DE LAS CAPTURAS
-      const PUBLIC_KEY = '940cb800-d888-4be6-92c7-e8fb0b6ddfd';
-      const ASSISTANT_ID = 'af7a436b-5ca5-443d-9c37-adeb7832b716';
+        const vapi = new Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
 
-      const vapi = new Vapi(PUBLIC_KEY);
+        const btn = document.getElementById('vapi-btn');
+        const inputDni = document.getElementById('dniInput');
 
-      document.getElementById('vapi-btn').addEventListener('click', () => {
-        const dniIngresado = document.getElementById('dniInput').value;
-
-        if (!dniIngresado) {
-          alert("Por favor, ingresá tu DNI primero.");
-          return;
-        }
-
-        console.log("Iniciando llamada para DNI:", dniIngresado);
-
-        vapi.start({
-          assistantId: ASSISTANT_ID,
-          assistantOverrides: {
-            variableValues: {
-              dni: dniIngresado
+        btn.addEventListener('click', () => {
+            const dni = inputDni.value;
+            
+            if(!dni) {
+                alert("Por favor, ingresá tu DNI");
+                return;
             }
-          }
-        });
-      });
 
-      // ESCUCHA DE ERRORES PARA SABER QUÉ PASA
-      vapi.on('error', (error) => {
-        console.error('Error de Vapi:', error);
-        alert('Hubo un error al conectar. Revisá el micrófono.');
-      });
+            console.log("Llamando a Irina con DNI:", dni);
+
+            vapi.start({
+                assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
+                assistantOverrides: {
+                    variableValues: {
+                        dni: dni
+                    }
+                }
+            });
+        });
+
+        vapi.on('call-start', () => console.log('Llamada iniciada'));
+        vapi.on('error', (e) => console.error('Error de Vapi:', e));
     </script>
 </body>
 </html>
