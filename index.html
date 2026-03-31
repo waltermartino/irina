@@ -6,10 +6,12 @@
     <title>Postulación - Irina AI</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 350px; }
-        h1 { color: #1a73e8; font-size: 24px; }
-        input { width: 100%; padding: 12px; margin: 20px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        button { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 350px; width: 90%; }
+        h1 { color: #1a73e8; font-size: 22px; margin-bottom: 10px; }
+        p { color: #555; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
+        button { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; transition: background 0.3s; }
+        button:hover { background: #1557b0; }
     </style>
 </head>
 <body>
@@ -21,25 +23,38 @@
     </div>
 
     <script src="https://cdn.vapi.ai/vapi.js"></script>
+
     <script>
-      // TUS CLAVES REALES SEGÚN CAPTURAS
-      const vapi = new Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd'); 
-      const assistantId = "af7a436b-5ca5-443d-9c37-adeb7832b716";
+      // CONFIGURACIÓN CON TUS CLAVES DE LAS CAPTURAS
+      const PUBLIC_KEY = '940cb800-d888-4be6-92c7-e8fb0b6ddfd';
+      const ASSISTANT_ID = 'af7a436b-5ca5-443d-9c37-adeb7832b716';
+
+      const vapi = new Vapi(PUBLIC_KEY);
 
       document.getElementById('vapi-btn').addEventListener('click', () => {
-        const dniVal = document.getElementById('dniInput').value;
+        const dniIngresado = document.getElementById('dniInput').value;
 
-        if (!dniVal) {
-          alert("Por favor, poné tu DNI primero.");
+        if (!dniIngresado) {
+          alert("Por favor, ingresá tu DNI primero.");
           return;
         }
 
+        console.log("Iniciando llamada para DNI:", dniIngresado);
+
         vapi.start({
-          assistantId: assistantId,
+          assistantId: ASSISTANT_ID,
           assistantOverrides: {
-            variableValues: { dni: dniVal }
+            variableValues: {
+              dni: dniIngresado
+            }
           }
         });
+      });
+
+      // ESCUCHA DE ERRORES PARA SABER QUÉ PASA
+      vapi.on('error', (error) => {
+        console.error('Error de Vapi:', error);
+        alert('Hubo un error al conectar. Revisá el micrófono.');
       });
     </script>
 </body>
