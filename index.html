@@ -2,59 +2,40 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Irina Hire - V20</title>
+    <title>Irina Hire - V22 Oficial</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script type="module">
-        import Vapi from 'https://cdn.skypack.dev/@vapi-ai/web';
-
-        const btn = document.getElementById('vapi-btn');
-        const status = document.getElementById('status');
-        
-        // USANDO TU KEY CORREGIDA: 940cb800-d888-4be6-92c7-e8fb0b6b6ddfd
-        const vapi = new Vapi("940cb800-d888-4be6-92c7-e8fb0b6b6ddfd");
-
-        btn.onclick = () => {
-            status.innerText = "Estado: Conectando...";
-            vapi.start("af7a436b-5ca5-443d-9c37-adeb7832b716");
-        };
-
-        vapi.on('call-start', () => {
-            status.innerText = "Estado: EN LLAMADA";
-            btn.innerText = "🔴 ESCUCHANDO...";
-            btn.style.background = "#dc3545";
-        });
-
-        vapi.on('call-end', () => {
-            status.innerText = "Estado: Llamada finalizada";
-            btn.innerText = "📞 REINTENTAR";
-            btn.style.background = "#1a73e8";
-        });
-
-        vapi.on('error', (e) => {
-            console.error(e);
-            alert("Vapi dice: " + (e.message || "Error de conexión. Revisá si el dominio está permitido en el Dashboard."));
-            status.innerText = "Estado: Error";
-        });
-    </script>
+    <script
+      src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js"
+      defer
+      async
+    ></script>
 
     <style>
-        body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
+        body { font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
         .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 320px; border-top: 8px solid #1a73e8; }
-        #vapi-btn { background: #1a73e8; color: white; border: none; padding: 20px; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; }
-        .badge { background: #333; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; }
+        .badge { background: #333; color: white; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <span class="badge">VERSIÓN V20</span>
-        <h2 style="color: #1a73e8;">Irina Hire</h2>
-        <p style="color: #666; font-size: 14px;">Key actualizada y corregida.</p>
+        <span class="badge">SISTEMA V22 - OFICIAL</span>
+        <h2 style="color: #1a73e8; margin-top: 15px;">Irina Hire</h2>
+        <p style="color: #666; font-size: 14px;">Atributos corregidos: api-key y assistant</p>
         
-        <button id="vapi-btn">📞 INICIAR LLAMADA</button>
-        
-        <p id="status" style="margin-top: 20px; font-style: italic; color: #888;">Listo para conectar</p>
+        <vapi-widget
+            api-key="940cb800-d888-4be6-92c7-e8fb0b6b6ddfd"
+            assistant="af7a436b-5ca5-443d-9c37-adeb7832b716"
+            mode="voice"
+            theme="light"
+            color-accent="#1a73e8"
+            title="Irina Hire"
+        ></vapi-widget>
+
+        <p style="margin-top: 25px; font-size: 12px; color: #999;">
+            Si el botón no aparece, refrescá con Ctrl+F5.
+        </p>
     </div>
 
 </body>
