@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Postulación - Irina AI</title>
+    
+    <script src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js"></script>
+
     <style>
         body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
         .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 300px; }
@@ -14,30 +17,31 @@
 <body>
     <div class="card">
         <h2>Irina Hire</h2>
+        <p>Ingresá tu DNI para hablar</p>
         <input type="number" id="dniInput" placeholder="Tu DNI">
         <button id="vapi-btn">📞 Iniciar Llamada</button>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js"></script>
 
     <script>
       const btn = document.getElementById('vapi-btn');
       
       btn.addEventListener('click', () => {
         const dniVal = document.getElementById('dniInput').value;
-        if (!dniVal) { alert("Poné tu DNI"); return; }
+        if (!dniVal) { alert("Por favor, poné tu DNI"); return; }
 
-        // Intentamos arrancar Vapi directamente al hacer clic
-        try {
-            const vapi = new window.vapiSDK.Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
+        // Buscamos la librería en cualquier rincón del navegador
+        const VapiSDK = window.vapiSDK ? window.vapiSDK.Vapi : (window.Vapi ? window.Vapi : null);
+
+        if (VapiSDK) {
+            const vapi = new VapiSDK('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
             vapi.start({
                 assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
                 assistantOverrides: { variableValues: { dni: dniVal } }
             });
-            console.log("Llamada enviada");
-        } catch (e) {
-            alert("Error: La herramienta aún no cargó. Refrescá la página y esperá 5 segundos.");
-            console.error(e);
+            btn.innerText = "Conectando...";
+            btn.style.background = "#34a853";
+        } else {
+            alert("Todavía no cargó. Esperá 3 segundos y dale de nuevo.");
         }
       });
     </script>
