@@ -1,53 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PRUEBA V6</title>
+    <title>Prueba Irina V7</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/@vapi-ai/web@latest/dist/vapi.js"></script>
 </head>
-<body>
+<body style="font-family: sans-serif; text-align: center; padding-top: 50px; background: #f4f7f9;">
 
-    <h1>PRUEBA DE CONEXIÓN V6</h1>
-    <p>Si ves V6, GitHub ya actualizó.</p>
-    
-    <button id="vapi-btn" style="padding: 20px; font-size: 20px; background: #007bff; color: white; border: none; border-radius: 10px;">
-        PROBAR LLAMADA DIRECTA
+    <h1>Irina Hire V7</h1>
+    <p>Si ves V7, el código cargó.</p>
+
+    <button id="vapi-btn" style="padding: 20px 40px; font-size: 20px; background: #28a745; color: white; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(40,167,69,0.3);">
+        📞 INICIAR ENTREVISTA
     </button>
 
     <script>
-      // MÉTODO DE INYECCIÓN FORZADA (Snippet oficial de Vapi)
-      (function (d, t) {
-        var g = d.createElement(t),
-            s = d.getElementsByTagName(t)[0];
-        g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
-        g.defer = true;
-        g.async = true;
-        s.parentNode.insertBefore(g, s);
+        const btn = document.getElementById('vapi-btn');
+        let vapi = null;
 
-        g.onload = function () {
-          console.log("Vapi cargado correctamente");
-        };
-      })(document, "script");
+        btn.addEventListener('click', () => {
+            // Buscamos el SDK
+            const VapiSDK = window.Vapi || (window.vapiSDK ? window.vapiSDK.Vapi : null);
 
-      document.getElementById('vapi-btn').addEventListener('click', function() {
-        // Intentamos llamar usando el SDK inyectado
-        if (window.vapiSDK) {
-            window.vapiSDK.run({
-                apiKey: "940cb800-d888-4be6-92c7-e8fb0b6ddfd", // Tu Public Key
-                assistant: "af7a436b-5ca5-443d-9c37-adeb7832b716", // Tu Assistant ID
-                config: {
-                    position: "bottom-right",
-                },
-            });
-            this.innerText = "LLAMANDO...";
-        } else {
-            alert("V6: El sistema sigue sin detectar la librería. Intentando carga alternativa...");
-            // Reintento manual
-            const s = document.createElement('script');
-            s.src = "https://unpkg.com/@vapi-ai/web@latest/dist/vapi.js";
-            document.head.appendChild(s);
-        }
-      });
+            if (VapiSDK) {
+                if (!vapi) {
+                    // IMPORTANTE: Verificá que esta Key sea EXACTAMENTE la del panel
+                    vapi = new VapiSDK('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
+                }
+
+                btn.innerText = "CONECTANDO...";
+                
+                vapi.start({
+                    assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716"
+                });
+
+                vapi.on('call-start', () => {
+                    btn.innerText = "EN LLAMADA";
+                    btn.style.background = "#dc3545";
+                });
+
+                vapi.on('error', (e) => {
+                    console.error(e);
+                    alert("Error de conexión. Intentá permitir cookies o usar Chrome.");
+                    btn.innerText = "REINTENTAR";
+                });
+            } else {
+                alert("El motor de voz no cargó. Refrescá la página.");
+            }
+        });
     </script>
-
 </body>
 </html>
