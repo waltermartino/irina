@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Postulación - Irina AI</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
+        h1 { color: #1a73e8; margin-bottom: 10px; }
+        p { color: #5f6368; margin-bottom: 30px; }
+        button { background: #1a73e8; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #1557b0; transform: scale(1.05); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Bienvenido al Proceso</h1>
+        <p>Hacé clic abajo para iniciar tu charla con Irina.</p>
+        <button id="vapi-btn">📞 Iniciar Llamada</button>
+    </div>
+
+    <script src="https://cdn.vapi.ai/vapi.js"></script>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const dniCandidato = urlParams.get('dni') || 'no especificado';
+
+      const vapi = new Vapi('940cb800-d888-4be6-92c7-e8fb06b6ddfd'); // <-- TU PUBLIC KEY DE VAPI ACÁ
+
+      document.getElementById('vapi-btn').addEventListener('click', () => {
+        vapi.start({
+          assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716", // <-- TU ASSISTANT ID ACÁ
+          assistantOverrides: { variableValues: { dni: dniCandidato } }
+        });
+      });
+    </script>
+</body>
+</html>
