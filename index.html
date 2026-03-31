@@ -1,63 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Irina V9 - Test</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="text-align:center; font-family:sans-serif; padding-top:80px; background:#f0f2f5;">
-
-    <div style="background:white; display:inline-block; padding:30px; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-        <h1 style="color:#1a73e8; margin-bottom:0;">Irina Hire</h1>
-        <p style="font-weight:bold; color:#d93025;">VERSIÓN: V9</p>
-        <hr>
-        <p>Si ves "V9", el código está actualizado.</p>
-        
-        <button id="btn" style="padding:20px 40px; font-size:18px; background:#1a73e8; color:white; border:none; border-radius:50px; cursor:pointer; font-weight:bold;">
-            INICIAR LLAMADA V9
-        </button>
-        
-        <p id="status" style="margin-top:20px; color:#666;">Estado: Listo para probar</p>
-    </div>
-
-    <script>
-      // Inyección del motor
-      (function (d, t) {
-        var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
-        g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
-        g.defer = true; g.async = true;
-        s.parentNode.insertBefore(g, s);
-      })(document, "script");
-
-      const btn = document.getElementById('btn');
-      const status = document.getElementById('status');
-
-      btn.onclick = function() {
+btn.onclick = function() {
         if (window.vapiSDK) {
-            status.innerText = "Estado: Conectando con Vapi...";
+            status.innerText = "Estado: Iniciando motor...";
             
-            const vapi = window.vapiSDK.run({
-                apiKey: "940cb800-d888-4be6-92c7-e8fb0b6ddfd", 
-                assistant: "af7a436b-5ca5-443d-9c37-adeb7832b716"
+            // Usamos el método start que es más "crudo" y directo
+            const vapiInstance = new window.vapiSDK.Vapi("940cb800-d888-4be6-92c7-e8fb0b6ddfd");
+            
+            vapiInstance.start({
+                assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716"
             });
 
-            vapi.on('call-start', () => {
-                status.innerText = "Estado: EN LLAMADA (Hablá ahora)";
+            vapiInstance.on('call-start', () => {
+                status.innerText = "Estado: EN LLAMADA";
                 btn.style.background = "#34a853";
-                btn.innerText = "CONECTADO";
             });
 
-            vapi.on('error', (e) => {
-                status.innerText = "Estado: ERROR";
-                alert("DETALLE DEL ERROR: " + e.message);
-                console.error(e);
+            vapiInstance.on('error', (e) => {
+                alert("ERROR: " + e.message);
+                status.innerText = "Estado: Falló la conexión";
             });
-
-        } else {
-            alert("Error: El motor V9 no cargó. Esperá 5 segundos y reintentá.");
         }
       };
-    </script>
-
-</body>
-</html>
