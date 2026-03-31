@@ -1,37 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PRUEBA V5</title>
-    <script src="https://unpkg.com/@vapi-ai/web@latest/dist/vapi.js"></script>
+    <title>PRUEBA V6</title>
+    <meta charset="UTF-8">
 </head>
 <body>
 
-    <h1>PRUEBA DE CONEXIÓN V5</h1>
-    <p>Si ves esto, la página actualizó.</p>
+    <h1>PRUEBA DE CONEXIÓN V6</h1>
+    <p>Si ves V6, GitHub ya actualizó.</p>
     
-    <button id="test-btn" style="padding: 20px; font-size: 20px;">
-        PROBAR LLAMADA
+    <button id="vapi-btn" style="padding: 20px; font-size: 20px; background: #007bff; color: white; border: none; border-radius: 10px;">
+        PROBAR LLAMADA DIRECTA
     </button>
 
     <script>
-        const btn = document.getElementById('test-btn');
+      // MÉTODO DE INYECCIÓN FORZADA (Snippet oficial de Vapi)
+      (function (d, t) {
+        var g = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+        g.defer = true;
+        g.async = true;
+        s.parentNode.insertBefore(g, s);
 
-        btn.addEventListener('click', () => {
-            // Buscamos a Vapi en el navegador
-            const VapiSDK = window.Vapi || (window.vapiSDK ? window.vapiSDK.Vapi : null);
+        g.onload = function () {
+          console.log("Vapi cargado correctamente");
+        };
+      })(document, "script");
 
-            if (VapiSDK) {
-                const vapi = new VapiSDK('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
-                
-                vapi.start({
-                    assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716"
-                });
-
-                btn.innerText = "CONECTANDO...";
-            } else {
-                alert("ERROR: El navegador no cargó el archivo de Vapi. Probá con datos móviles.");
-            }
-        });
+      document.getElementById('vapi-btn').addEventListener('click', function() {
+        // Intentamos llamar usando el SDK inyectado
+        if (window.vapiSDK) {
+            window.vapiSDK.run({
+                apiKey: "940cb800-d888-4be6-92c7-e8fb0b6ddfd", // Tu Public Key
+                assistant: "af7a436b-5ca5-443d-9c37-adeb7832b716", // Tu Assistant ID
+                config: {
+                    position: "bottom-right",
+                },
+            });
+            this.innerText = "LLAMANDO...";
+        } else {
+            alert("V6: El sistema sigue sin detectar la librería. Intentando carga alternativa...");
+            // Reintento manual
+            const s = document.createElement('script');
+            s.src = "https://unpkg.com/@vapi-ai/web@latest/dist/vapi.js";
+            document.head.appendChild(s);
+        }
+      });
     </script>
 
 </body>
