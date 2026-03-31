@@ -21,36 +21,41 @@
         <button id="vapi-btn">📞 Iniciar Llamada</button>
     </div>
 
-    <script src="https://cdn.vapi.ai/vapi.js"></script>
-
     <script>
-        const vapi = new Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
+      // MÉTODO DE CARGA SEGURA
+      var vapiInstance = null;
+      (function (d, t) {
+        var g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+        g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+        g.defer = true;
+        g.async = true;
+        s.parentNode.insertBefore(g, s);
+        g.onload = function () {
+          vapiInstance = new Vapi("940cb800-d888-4be6-92c7-e8fb0b6ddfd");
+        };
+      })(document, "script");
 
-        const btn = document.getElementById('vapi-btn');
-        const inputDni = document.getElementById('dniInput');
+      document.getElementById('vapi-btn').addEventListener('click', () => {
+        const dni = document.getElementById('dniInput').value;
+        
+        if (!dni) {
+          alert("Por favor, ingresá tu DNI primero.");
+          return;
+        }
 
-        btn.addEventListener('click', () => {
-            const dni = inputDni.value;
-            
-            if(!dni) {
-                alert("Por favor, ingresá tu DNI");
-                return;
-            }
+        if (!vapiInstance) {
+          alert("La conexión todavía se está cargando. Esperá un segundo y reintentá.");
+          return;
+        }
 
-            console.log("Llamando a Irina con DNI:", dni);
-
-            vapi.start({
-                assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
-                assistantOverrides: {
-                    variableValues: {
-                        dni: dni
-                    }
-                }
-            });
+        vapiInstance.start({
+          assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
+          assistantOverrides: {
+            variableValues: { dni: dni }
+          }
         });
-
-        vapi.on('call-start', () => console.log('Llamada iniciada'));
-        vapi.on('error', (e) => console.error('Error de Vapi:', e));
+      });
     </script>
 </body>
 </html>
