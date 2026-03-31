@@ -2,55 +2,58 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Irina Hire - V18</title>
+    <title>Irina Hire - V19</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script
-      src="https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js"
-      defer
-      async
-    ></script>
+    <script type="module">
+        import Vapi from 'https://cdn.skypack.dev/@vapi-ai/web';
+
+        const btn = document.getElementById('vapi-btn');
+        const status = document.getElementById('status');
+        
+        // Configuramos el asistente
+        const vapi = new Vapi("940cb800-d888-4be6-92c7-e8fb0b6ddfd");
+
+        btn.onclick = () => {
+            status.innerText = "Estado: Conectando...";
+            vapi.start("af7a436b-5ca5-443d-9c37-adeb7832b716");
+        };
+
+        vapi.on('call-start', () => {
+            status.innerText = "Estado: EN LLAMADA. ¡Hablá!";
+            btn.innerText = "🔴 AL AIRE";
+            btn.style.background = "#dc3545";
+        });
+
+        vapi.on('error', (e) => {
+            console.error(e);
+            alert("Error de Vapi: " + e.message);
+            status.innerText = "Estado: Error de conexión";
+        });
+    </script>
 
     <style>
-        body { 
-            background: #f0f2f5; 
-            font-family: sans-serif; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            margin: 0; 
+        body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 320px; }
+        #vapi-btn { 
+            background: #1a73e8; color: white; border: none; padding: 20px; 
+            border-radius: 12px; font-size: 18px; font-weight: bold; 
+            cursor: pointer; width: 100%; margin-top: 20px;
+            display: block !important; /* Forzamos visibilidad */
         }
-        .container {
-            text-align: center;
-            background: white;
-            padding: 50px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        /* Forzamos que el widget sea visible si GitHub lo oculta */
-        vapi-widget {
-            display: block !important;
-            margin-top: 20px;
-        }
+        .badge { background: #333; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1 style="color: #1a73e8; margin-bottom: 10px;">Irina Hire</h1>
-        <div style="background: #000; color: #fff; padding: 5px 10px; border-radius: 5px; font-size: 12px; display: inline-block;">SISTEMA V18</div>
-        <p style="color: #666; margin-top: 20px;">Si el botón no aparece abajo, refrescá la página (F5).</p>
-
-        <vapi-widget
-            api-key="940cb800-d888-4be6-92c7-e8fb0b6ddfd"
-            assistant="af7a436b-5ca5-443d-9c37-adeb7832b716"
-            mode="voice"
-            theme="light"
-            color-accent="#1a73e8"
-            title="Irina Hire"
-            cta-title="EMPEZAR ENTREVISTA"
-        ></vapi-widget>
+    <div class="card">
+        <span class="badge">SISTEMA V19</span>
+        <h2 style="color: #1a73e8;">Irina Hire</h2>
+        <p style="color: #666; font-size: 14px;">Si ves este texto pero no el botón azul, avisame urgente.</p>
+        
+        <button id="vapi-btn">📞 EMPEZAR LLAMADA</button>
+        
+        <p id="status" style="margin-top: 20px; font-style: italic; color: #888;">Estado: Listo</p>
     </div>
 
 </body>
