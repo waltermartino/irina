@@ -1,42 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Irina V8</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="text-align:center; font-family:sans-serif; padding-top:100px;">
+(function (d, t) {
+    var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+    g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+    g.defer = true; g.async = true;
+    s.parentNode.insertBefore(g, s);
+  })(document, "script");
 
-    <h1>Irina Hire - V8</h1>
-    
-    <button id="btn" style="padding:20px; font-size:18px; background:#007bff; color:white; border:none; border-radius:10px;">
-        Iniciar Llamada de Prueba
-    </button>
+  document.getElementById('btn').onclick = function() {
+    if (window.vapiSDK) {
+        const vapi = window.vapiSDK.run({
+            apiKey: "940cb800-d888-4be6-92c7-e8fb0b6ddfd", 
+            assistant: "af7a436b-5ca5-443d-9c37-adeb7832b716"
+        });
 
-    <script>
-      // Este es el "clavo" que vamos a meter para que Vapi cargue sí o sí
-      (function (d, t) {
-        var g = d.createElement(t),
-            s = d.getElementsByTagName(t)[0];
-        g.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
-        g.defer = true;
-        g.async = true;
-        s.parentNode.insertBefore(g, s);
-      })(document, "script");
+        this.innerText = "CONECTANDO...";
 
-      document.getElementById('btn').onclick = function() {
-        if (window.vapiSDK) {
-            window.vapiSDK.run({
-                apiKey: "940cb800-d888-4be6-92c7-e8fb0b6ddfd", // Tu Public Key
-                assistant: "af7a436b-5ca5-443d-9c37-adeb7832b716", // Tu Assistant ID
-                config: { position: "bottom-right" }
-            });
-            this.innerText = "LLAMANDO...";
-        } else {
-            alert("V8: El motor todavía no bajó. Esperá 5 segundos y tocá de nuevo.");
-        }
-      };
-    </script>
+        // ESTO NOS VA A DECIR LA VERDAD:
+        vapi.on('error', (e) => {
+            alert("ERROR DE VAPI: " + e.message);
+            console.error(e);
+            this.innerText = "FALLÓ";
+        });
 
-</body>
-</html>
+        vapi.on('call-start', () => {
+            this.innerText = "EN LLAMADA";
+        });
+    } else {
+        alert("El motor no cargó. Refrescá.");
+    }
+  };
