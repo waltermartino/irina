@@ -5,19 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Postulación - Irina AI</title>
     
-    <script src="https://unpkg.com/@vapi-ai/web@latest/dist/vapi.js"></script>
+    <script src="https://unpkg.com/@vapi-ai/web@1.0.1/dist/vapi.js"></script>
 
     <style>
-        body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 300px; }
-        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        #vapi-btn { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; }
+        body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; padding: 20px; box-sizing: border-box; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 350px; }
+        input { width: 100%; padding: 15px; margin-bottom: 20px; border: 2px solid #eee; border-radius: 12px; font-size: 16px; box-sizing: border-box; }
+        #vapi-btn { background: #1a73e8; color: white; border: none; padding: 18px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
+        #vapi-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
     <div class="card">
-        <h2>Irina Hire</h2>
-        <input type="number" id="dniInput" placeholder="Tu DNI">
+        <h2 style="color: #1a73e8;">Irina Hire</h2>
+        <p style="color: #666;">Ingresá tu DNI para comenzar la entrevista por voz.</p>
+        <input type="number" id="dniInput" placeholder="Número de DNI" pattern="\d*">
         <button id="vapi-btn">📞 Iniciar Llamada</button>
     </div>
 
@@ -26,29 +28,35 @@
       
       btn.addEventListener('click', () => {
         const dniVal = document.getElementById('dniInput').value;
-        if (!dniVal) { alert("Poné tu DNI"); return; }
+        if (!dniVal) { alert("Por favor, ingresá tu DNI"); return; }
 
-        // BUSQUEDA TRIPLE: Intentamos encontrar a Vapi como sea
+        // BUSQUEDA EXHAUSTIVA DEL MOTOR
         const VapiSDK = window.Vapi || (window.vapiSDK ? window.vapiSDK.Vapi : null);
 
         if (VapiSDK) {
             try {
+                // Tu Public Key de las capturas
                 const vapi = new VapiSDK('940cb800-d888-4be6-92c7-e8fb0b6ddfd');
+                
                 vapi.start({
                     assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
                     assistantOverrides: { variableValues: { dni: dniVal } }
                 });
+
                 btn.innerText = "Conectando...";
                 btn.style.background = "#34a853";
+                
+                vapi.on('call-start', () => btn.innerText = "En llamada...");
+                vapi.on('call-end', () => {
+                    btn.innerText = "📞 Reintentar Llamada";
+                    btn.style.background = "#1a73e8";
+                });
+
             } catch (err) {
-                alert("Error al iniciar: " + err.message);
+                alert("Error técnico: " + err.message);
             }
         } else {
-            alert("El motor de voz aún no baja de internet. Por favor, esperá 10 segundos con la página abierta e intentalo de nuevo.");
-            // Forzamos una recarga del script si falló
-            const s = document.createElement('script');
-            s.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
-            document.head.appendChild(s);
+            alert("El motor aún no carga. Probá lo siguiente:\n1. Usá Chrome o Safari.\n2. Desactivá el 'Modo Ahorro de Datos'.\n3. Refrescá la página.");
         }
       });
     </script>
