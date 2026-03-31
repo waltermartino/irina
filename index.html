@@ -5,46 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Postulación - Irina AI</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 400px; }
-        h1 { color: #1a73e8; margin-bottom: 10px; }
-        p { color: #5f6368; margin-bottom: 20px; }
-        input { width: 80%; padding: 12px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; text-align: center; }
-        input:focus { border-color: #1a73e8; outline: none; }
-        button { background: #1a73e8; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
-        button:hover { background: #1557b0; transform: scale(1.05); }
+        body { font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; max-width: 350px; }
+        h1 { color: #1a73e8; font-size: 24px; }
+        input { width: 100%; padding: 12px; margin: 20px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
+        button { background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
     <div class="card">
-        <h1>Bienvenido al Proceso</h1>
-        <p>Por favor, ingresá tu DNI para comenzar la entrevista con Irina.</p>
-        
-        <input type="number" id="dniInput" placeholder="Tu número de documento">
-        
+        <h1>Proceso de Selección</h1>
+        <p>Ingresá tu DNI para hablar con Irina.</p>
+        <input type="number" id="dniInput" placeholder="Número de documento">
         <button id="vapi-btn">📞 Iniciar Llamada</button>
     </div>
 
     <script src="https://cdn.vapi.ai/vapi.js"></script>
     <script>
-      // 1. Configuración de Vapi con tus claves
+      // TUS CLAVES REALES SEGÚN CAPTURAS
       const vapi = new Vapi('940cb800-d888-4be6-92c7-e8fb0b6ddfd'); 
+      const assistantId = "af7a436b-5ca5-443d-9c37-adeb7832b716";
 
       document.getElementById('vapi-btn').addEventListener('click', () => {
-        const dniIngresado = document.getElementById('dniInput').value;
+        const dniVal = document.getElementById('dniInput').value;
 
-        if (!dniIngresado) {
-          alert("Por favor, ingresá tu DNI antes de llamar.");
+        if (!dniVal) {
+          alert("Por favor, poné tu DNI primero.");
           return;
         }
 
-        // 2. Iniciamos la llamada pasándole el DNI que escribió el usuario
         vapi.start({
-          assistantId: "af7a436b-5ca5-443d-9c37-adeb7832b716",
+          assistantId: assistantId,
           assistantOverrides: {
-            variableValues: {
-              dni: dniIngresado
-            }
+            variableValues: { dni: dniVal }
           }
         });
       });
