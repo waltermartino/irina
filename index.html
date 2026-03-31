@@ -1,37 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Irina V12 - Archivo Local</title>
+    <title>Irina Hire - V12.1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="vapi.js"></script>
-</head>
-<body style="text-align:center; font-family:sans-serif; padding-top:50px; background:#f0f2f5;">
+    
+    <script src="./vapi.js"></script>
 
-    <div style="background:white; display:inline-block; padding:30px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.1); max-width: 90%;">
-        <h1 style="color:#1a73e8;">Irina Hire</h1>
-        <p style="background: #000; color: #fff; padding: 5px 15px; display: inline-block; font-weight: bold; border-radius: 5px;">SISTEMA: V12</p>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 350px; border-top: 6px solid #1a73e8; }
+        .version-badge { background: #333; color: white; padding: 4px 12px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-bottom: 15px; display: inline-block; }
+        h2 { color: #1a73e8; margin: 10px 0; }
+        #vapi-btn { background: #28a745; color: white; border: none; padding: 18px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; margin-top: 20px; box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
+        #vapi-btn:active { transform: scale(0.98); }
+        #status { margin-top: 15px; font-size: 14px; color: #666; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="version-badge">SISTEMA: V12.1</div>
+        <h2>Irina Hire</h2>
+        <p style="color: #666; font-size: 14px;">Entrevista de voz automatizada</p>
         
-        <p>Carga de motor: <b>Local (GitHub)</b></p>
+        <button id="vapi-btn">📞 INICIAR LLAMADA</button>
         
-        <button id="btn" style="padding:20px; font-size:18px; background:#28a745; color:white; border:none; border-radius:50px; cursor:pointer; width: 100%; font-weight: bold;">
-            🚀 INICIAR ENTREVISTA V12
-        </button>
-        
-        <p id="status" style="margin-top:20px; color:#666;">Estado: Listo</p>
+        <p id="status">Estado: Listo para conectar</p>
     </div>
 
     <script>
-      const btn = document.getElementById('btn');
+      const btn = document.getElementById('vapi-btn');
       const status = document.getElementById('status');
 
       btn.onclick = function() {
-        // Buscamos la clase Vapi que cargó desde tu archivo local
-        const SDK = window.Vapi;
+        // Buscamos el motor en cualquier lugar que pueda estar
+        const SDK = window.Vapi || (window.vapiSDK ? window.vapiSDK.Vapi : null);
 
         if (SDK) {
-            status.innerText = "Estado: Conectando...";
+            status.innerText = "Estado: Conectando con el servidor...";
+            
             try {
+                // Tu clave pública y ID de asistente
                 const vapi = new SDK("940cb800-d888-4be6-92c7-e8fb0b6ddfd");
                 
                 vapi.start({
@@ -39,23 +49,31 @@
                 });
 
                 vapi.on('call-start', () => {
-                    status.innerText = "Estado: EN LLAMADA";
-                    btn.style.background = "#dc3545";
+                    status.innerText = "Estado: EN LLAMADA. ¡Hablá ahora!";
                     btn.innerText = "🔴 AL AIRE";
+                    btn.style.background = "#dc3545";
+                });
+
+                vapi.on('call-end', () => {
+                    status.innerText = "Estado: Llamada terminada";
+                    btn.innerText = "📞 REINTENTAR";
+                    btn.style.background = "#28a745";
                 });
 
                 vapi.on('error', (e) => {
-                    alert("Vapi dice: " + e.message);
+                    alert("Aviso de Vapi: " + e.message);
                     status.innerText = "Estado: Error de conexión";
                 });
+
             } catch (err) {
                 alert("Error de inicio: " + err.message);
             }
         } else {
-            alert("V12: GitHub no encontró el archivo vapi.js. Verificá que el nombre esté bien escrito.");
+            // Si entra acá, es que GitHub no leyó el vapi.js
+            alert("V12.1: El archivo 'vapi.js' no se detecta. \n\nVerificá que el archivo esté en GitHub y se llame exactamente así, en minúsculas.");
+            status.innerText = "Estado: Error de carga de archivo";
         }
       };
     </script>
-
 </body>
 </html>
